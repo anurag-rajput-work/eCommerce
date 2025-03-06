@@ -13,6 +13,7 @@ class Clothes(models.Model):
     size = models.CharField(max_length=100, choices=SIZES)
     quantity = models.IntegerField()
     image = models.ImageField(upload_to='images/')
+    description = models.TextField(default='')
     
     def __str__(self):
         return self.name
@@ -43,3 +44,4 @@ class ClothesCertification(models.Model):
     
     def __str__(self): 
         return f'Certificate for {self.name.name}'
+

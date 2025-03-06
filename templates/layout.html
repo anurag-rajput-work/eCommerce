@@ -2,15 +2,149 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    {% tailwind_css %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Store</title>
+  
+  <!-- Tailwind CSS CDN (Replace with local setup if needed) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
-<body>
-    <nav class = "bg-blue-500 text-2xl font-bold  text-center">this is nav bar</nav>
-    {% block content %}{% endblock %}
+
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-bold text-indigo-600">Online CLOTH SHOP</a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#hero" class="hover:text-indigo-600">Home</a>
+        <a href="#about" class="hover:text-indigo-600">About</a>
+        <a href="#services" class="hover:text-indigo-600">cart</a>
+        <a href="#portfolio" class="hover:text-indigo-600">clothe</a>
+        <a href="#team" class="hover:text-indigo-600">offer</a>
+        <a href="#contact" class="hover:text-indigo-600">Contact</a>
+      </nav>
+      <button class="md:hidden text-gray-800 focus:outline-none">
+        <i class="bi bi-list text-2xl"></i>
+      </button>
+    </div>
+  </header>
+
+  {% block title %}{% endblock %}
+{% block head %}
+    
+{% endblock %}
+
+  <main class="mt-20">
+
+    
+    
+    <!-- Hero Section -->
+    <section id="hero" class="relative h-screen flex items-center justify-center bg-cover bg-center" 
+      style="background-image: url('{% static 'img/hero-bg.jpg' %}');">
+      <div class="text-center text-white bg-black bg-opacity-50 p-6 rounded-lg">
+        <h2 class="text-4xl font-bold">Online Presence with us</h2>
+        <p class="mt-2 text-lg">let us design your online presence</p>
+        <a href="#about" class="mt-4 inline-block bg-indigo-600 px-6 py-2 rounded text-white hover:bg-indigo-700">Get Started</a>
+      </div>
+    </section>
+
+    {% block content %}
+    {% endblock %}
+    
+    <!-- Clients Section -->
+    <section id="clients" class="py-12 bg-white">
+      <div class="container mx-auto text-center">
+        <h3 class="text-2xl font-semibold">Our Clients</h3>
+        <div class="flex flex-wrap justify-center gap-6 mt-6">
+          {% for i in "123456" %}
+          <img src="{% static 'img/clients/client-'|add:i|add:'.png' %}" class="h-16">
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+   
+    <!-- About Section -->
+    <section id="about" class="py-12 bg-gray-100">
+      <div class="container mx-auto flex flex-col md:flex-row items-center gap-8">
+        <img src="{% static 'img/about.jpg' %}" class="w-full md:w-1/2 rounded-lg shadow-lg">
+        <div class="w-full md:w-1/2">
+          <h3 class="text-3xl font-semibold">About Us</h3>
+          <p class="mt-4 text-gray-600">We specialize in creating stunning, high-performance websites.</p>
+          <ul class="mt-4 space-y-2">
+            <li class="flex items-center">
+              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> Responsive and Mobile-Friendly Designs
+            </li>
+            <li class="flex items-center">
+              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> SEO Optimized Websites
+            </li>
+            <li class="flex items-center">
+              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> Secure & Fast Hosting
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- Stats Section -->
+    <section id="stats" class="py-12 bg-indigo-600 text-white text-center">
+      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div>
+          <span class="text-4xl font-bold">232</span>
+          <p class="text-lg">Clients</p>
+        </div>
+        <div>
+          <span class="text-4xl font-bold">521</span>
+          <p class="text-lg">Projects</p>
+        </div>
+        <div>
+          <span class="text-4xl font-bold">1453</span>
+          <p class="text-lg">Hours of Support</p>
+        </div>
+        <div>
+          <span class="text-4xl font-bold">32</span>
+          <p class="text-lg">Workers</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="py-12 bg-white">
+      <div class="container mx-auto text-center">
+        <h3 class="text-3xl font-semibold">Why Choose Us?</h3>
+        <p class="mt-2 text-gray-600">We offer quality and reliability you can trust.</p>
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-gray-100 p-6 rounded-lg">
+            <i class="bi bi-award text-3xl text-indigo-600"></i>
+            <h4 class="mt-4 font-semibold">Top Quality</h4>
+            <p class="text-gray-600">We use the latest technologies to deliver the best results.</p>
+          </div>
+          <div class="bg-gray-100 p-6 rounded-lg">
+            <i class="bi bi-person-check text-3xl text-indigo-600"></i>
+            <h4 class="mt-4 font-semibold">Client-Focused</h4>
+            <p class="text-gray-600">We prioritize our clients' needs and satisfaction.</p>
+          </div>
+          <div class="bg-gray-100 p-6 rounded-lg">
+            <i class="bi bi-lightbulb text-3xl text-indigo-600"></i>
+            <h4 class="mt-4 font-semibold">Innovative Solutions</h4>
+            <p class="text-gray-600">We craft modern and innovative digital experiences.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call To Action -->
+    <section id="call-to-action" class="py-12 bg-indigo-700 text-white text-center">
+      <h3 class="text-3xl font-semibold">Ready to Elevate Your Business?</h3>
+      <p class="mt-2">Get in touch with us today and let's build something amazing.</p>
+      <a href="#contact" class="mt-4 inline-block bg-white text-indigo-700 px-6 py-2 rounded hover:bg-gray-200">Get Started</a>
+    </section>
+    {% tailwind_css %}
+  </main>
+
 </body>
 </html>
