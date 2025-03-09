@@ -20,12 +20,14 @@
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
       <a href="index.html" class="text-2xl font-bold text-indigo-600">Online CLOTH SHOP</a>
       <nav class="hidden md:flex space-x-6">
-        <a href="#hero" class="hover:text-indigo-600">Home</a>
-        <a href="#about" class="hover:text-indigo-600">About</a>
-        <a href="#services" class="hover:text-indigo-600">cart</a>
+        <a href="#hero" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Home</a>
+        <a href="#about" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">About</a>
+        <a href="{% url 'user_login' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">login</a>
+        <a href="{% url 'user_register' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Register</a>
+        {% comment %} <a href="#services" class="hover:text-indigo-600">cart</a>
         <a href="#portfolio" class="hover:text-indigo-600">clothe</a>
         <a href="#team" class="hover:text-indigo-600">offer</a>
-        <a href="#contact" class="hover:text-indigo-600">Contact</a>
+        <a href="#contact" class="hover:text-indigo-600">Contact</a> {% endcomment %}
       </nav>
       <button class="md:hidden text-gray-800 focus:outline-none">
         <i class="bi bi-list text-2xl"></i>
@@ -33,7 +35,7 @@
     </div>
   </header>
 
-  {% block title %}{% endblock %}
+
 {% block head %}
     
 {% endblock %}

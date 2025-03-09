@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Clothes, ClothesReview, Store, ClothesCertification
+from chai.models import *
 
 
 # Register your models here
@@ -25,3 +25,4 @@ class ClothesCertificationAdmin(admin.ModelAdmin):
 admin.site.register(Clothes, clothesAdmin)
 admin.site.register(ClothesCertification, ClothesCertificationAdmin)
 admin.site.register(Store, StoreAdmin)
+admin.site.register(customer)
