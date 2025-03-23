@@ -13,15 +13,21 @@
                 Create a new account
             </h2>
             <p class="mt-2 text-center text-sm leading-5 text-gray-500 max-w">
-                Or
-                <a href="#"
-                    class="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-                    login to your account
-                </a>
             </p>
         </div>
     
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-3 rounded-md 
+                        {% if message.tags == 'success' %} bg-green-100 text-green-700 
+                        {% elif message.tags == 'error' %} bg-red-100 text-red-700 
+                        {% elif message.tags == 'warning' %} bg-yellow-100 text-yellow-700 
+                        {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form method="POST" action="{% url 'user_register' %}">
                     {% csrf_token %}
@@ -47,7 +53,7 @@
                             <span
                                 class="inline-flex h-10 items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                             </span>
-                            <input id="username" name="username" placeholder="john" type="text" required=""
+                            <input id="username" name="username" placeholder="username" type="text" required=""
                                 class="flex-1  border border-gray-300 form-input pl-3 block w-full rounded-none rounded-r-md transition duration-150 ease-in-out sm:text-sm sm:leading-5">
                         </div>
                     </div>
@@ -100,6 +106,11 @@
                     </div>
                 </form>
     
+            </div>
+            <p class="mt-10 text-center text-sm/6 text-gray-500">
+                Already have an account?
+                <a href="{% url 'user_login'%}" class="font-semibold text-indigo-600 hover:text-indigo-500">Login</a>
+            </p>
             </div>
         </div>
     </div>

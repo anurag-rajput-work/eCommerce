@@ -1,18 +1,56 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cloth.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white dark:bg-gray-900 antialiased">
+    <section class="py-8 md:py-16">
+        <div class="max-w-screen-xl px-4 mx-auto">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
+                
+                <!-- Product Image -->
+                <div class="shrink-0 max-w-md lg:max-w-lg mx-auto">
+                    <img class="w-full rounded-lg" src="{{ cloth.image.url }}" alt="{{ cloth.name }}">
+                </div>
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6">
-            <img src="{{ cloth.image.url }}" alt="{{ cloth.name }}" class="img-fluid rounded">
+                <!-- Product Details -->
+                <div class="mt-6 sm:mt-8 lg:mt-0">
+                    <h1 class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
+                        {{ cloth.name }}
+                    </h1>
+
+                    <div class="mt-4">
+                        <p class="text-xl font-bold text-gray-900 dark:text-white">
+                            ₹ {{ cloth.price }}
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Size:</strong> {{ cloth.get_size_display }}</p>
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Quantity Available:</strong> {{ cloth.quantity }}</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Description:</strong></p>
+                        <p class="text-gray-500 dark:text-gray-400">{{ cloth.description }}</p>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="mt-6 sm:flex sm:gap-4">
+                        <a href="#" class="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            ❤️ Add to Favorites
+                        </a>
+
+                        <a href="#" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 flex items-center justify-center mt-4 sm:mt-0">
+                            🛒 Add to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h1 class="mb-4">{{ cloth.name }}</h1>
-            <p class="lead">Size: {{ cloth.get_size_display }}</p>
-            <p class="lead">Quantity Available: {{ cloth.quantity }}</p>
-            <p class="lead">Description:</p>
-            <p>{{ cloth.description }}</p>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    </section>
+</body>
+</html>

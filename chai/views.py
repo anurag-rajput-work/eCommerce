@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Clothes
 from django.shortcuts import get_object_or_404
-from .forms import clothesForm
+from .forms import *
+from django.contrib import messages
 # Create your views here.
 def myapp(request):
     cloth =  Clothes.objects.all()
@@ -11,12 +12,13 @@ def myapp(request):
 def detail(request, clothes_id):
     cloth = get_object_or_404(Clothes, pk=clothes_id)
     return render(request, 'chai/detail.html', {'cloth':cloth})
-def clothes_store(request):
-    store = None
-    form = clothesForm()  # Initialize the form
-    if request.method == 'POST':
-        form = clothesForm(request.POST)  
+def add_product(request):
+    if request.method == "POST":
+        form = ClothesForm(request.POST, request.FILES)
         if form.is_valid():
-            varity = form.cleaned_data['store']
-            store = Clothes.objects.filter(clothes_varieties=varity)
-    return render(request, 'chai/clothes_store.html', {'store': store, 'form': form}) 
+            form.save()
+            messages.success(request, "Product added successfully!")
+            return redirect("add_product")
+    else:
+        form = ClothesForm()
+    return render(request, "chai/add_product.html", {"form": form})

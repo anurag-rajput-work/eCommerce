@@ -20,10 +20,17 @@
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
       <a href="index.html" class="text-2xl font-bold text-indigo-600">Online CLOTH SHOP</a>
       <nav class="hidden md:flex space-x-6">
+        <a href="{% url 'add_product' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">add product</a>
+        
+        {% if user.is_authenticated %}
+        
         <a href="#hero" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Home</a>
-        <a href="#about" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">About</a>
+        <a href="{% url 'user_logout' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">logout</a>
+        {% else %}
         <a href="{% url 'user_login' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">login</a>
+        
         <a href="{% url 'user_register' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Register</a>
+        {% endif %}
         {% comment %} <a href="#services" class="hover:text-indigo-600">cart</a>
         <a href="#portfolio" class="hover:text-indigo-600">clothe</a>
         <a href="#team" class="hover:text-indigo-600">offer</a>
@@ -48,15 +55,19 @@
     <section id="hero" class="relative h-screen flex items-center justify-center bg-cover bg-center" 
       style="background-image: url('{% static 'img/hero-bg.jpg' %}');">
       <div class="text-center text-white bg-black bg-opacity-50 p-6 rounded-lg">
-        <h2 class="text-4xl font-bold">Online Presence with us</h2>
+        {% if user.is_authenticated %}
+        <h2 class="text-4xl font-bold">welcome to our online store {{ user.username }}</h2>
+        {% else %}
+        <h2 class="text-4xl font-bold">login to get started</h2>
+        {% endif %}
         <p class="mt-2 text-lg">let us design your online presence</p>
         <a href="#about" class="mt-4 inline-block bg-indigo-600 px-6 py-2 rounded text-white hover:bg-indigo-700">Get Started</a>
       </div>
     </section>
-
-    {% block content %}
-    {% endblock %}
-    
+    {% if user.is_authenticated %}d
+      {% block content %}
+      {% endblock %}
+    {% endif %}
     <!-- Clients Section -->
     <section id="clients" class="py-12 bg-white">
       <div class="container mx-auto text-center">

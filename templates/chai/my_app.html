@@ -10,7 +10,7 @@
      <div class =  "bg-blue-400 p-4">
          <img src="{{ item.image.url }}" alt="">
          <h3>{{ item.name }}</h3> 
-         <a href="#">
+         <a href="{% url 'detail' item.id %}">
             <button type="button"
             class = "bg-orange-500  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
             >
