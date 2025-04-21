@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+import uuid
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -63,11 +66,87 @@ class ClothesCertification(models.Model):
     def __str__(self): 
         return f'Certificate for {self.name.name}'
 
-# user model is here
 
 class customer(models.Model):
     user = models.OneToOneField(User, null=False, blank=False, on_delete=models.CASCADE)
     phone_field = models.CharField(max_length=10, blank=False)
+    id = models.AutoField(primary_key=True)  # Adding unique ID field
     
     def __str__(self):
         return self.user.username   
+
+
+        
+class order_Item(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    clothes = models.ForeignKey(Clothes, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    ordered = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f'{self.quantity} of {self.clothes.name}'
+    
+    def get_total_item_price(self):
+        return self.quantity * self.clothes.price
+    
+    def get_final_price(self):
+        return self.get_total_item_price()
+    
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(order_Item)
+    order_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateTimeField(default=timezone.now)
+    ordered = models.BooleanField(default=False)
+    order_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    DateTime_ofpayment = models.DateTimeField(default=timezone.now)
+    ordered_delivered = models.BooleanField(default=False)
+    shipping_address = models.CharField(max_length=100, blank=True, null=True)
+    billing_address = models.CharField(max_length=100, blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.order_id:
+            # Get the customer instance for the user
+            try:
+                customer_instance = customer.objects.get(user=self.user)
+                customer_id = customer_instance.id
+            except customer.DoesNotExist:
+                customer_id = 0  # Default if no customer found
+            
+            # Generate order ID using timestamp and customer ID
+            timestamp = self.DateTime_ofpayment.strftime("%Y%m%d%H")
+            self.order_id = f"ECOM2{timestamp}{customer_id}"
+            
+        return super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f'Order {self.id} by {self.user.username}'
+
+    def get_total_price(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_total_item_price()
+        return total
+    
+    def get_total_count(self):
+        return self.items.count()
+
+
+class CheckoutDetails(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100) 
+    contact_number = models.CharField(max_length=15)
+    house_number = models.CharField(max_length=100)
+    area = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pin_code = models.CharField(max_length=10)
+    country = models.CharField(max_length=100)
+    same_billing_address = models.BooleanField(default=True)
+
+    def get_full_address(self):
+        return f"{self.house_number}, {self.area}, {self.city}, {self.state}, {self.pin_code}, {self.country}"
+
+    def __str__(self):
+        return f"{self.name} - {self.get_full_address()}"

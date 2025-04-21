@@ -1,0 +1,106 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Your Cart | Online Store</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-cyan-800 text-white">
+<!-- Navbar -->
+<header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="{% url 'home' %}" class="text-2xl font-bold text-indigo-600">SHOPPING CENTER</a>
+    <nav class="hidden md:flex space-x-6">
+        <a href="{% url 'add_product' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Add Product</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'home' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Home</a>
+        <a href="{% url 'user_logout' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Logout</a>
+        {% else %}
+        <a href="{% url 'user_login' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Login</a>
+        <a href="{% url 'user_register' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Register</a>
+        {% endif %}
+    </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="pt-28 px-6 lg:px-24 pb-16">
+    <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
+
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+            <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-500{% endif %} text-white">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if order and order.items.all %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2 space-y-6">
+        {% for item in order.items.all %}
+            <div class="bg-gray-800 rounded-lg p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+            <div class="flex items-center gap-4">
+                <img src="{{ item.clothes.image.url }}" alt="{{ item.clothes.name }}" class="w-24 h-24 object-cover rounded-lg" />
+                <div>
+                <h2 class="text-lg font-semibold">{{ item.clothes.name }}</h2>
+                <p class="text-gray-400">Size: {{ item.clothes.get_size_display }}</p>
+                <p class="text-gray-400">Price: ₹{{ item.clothes.price }}</p>
+                <a href="{% url 'delete_item' item.clothes.pk %}" class="text-red-400 text-sm hover:underline mt-2 inline-block">Remove</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <form method="post" action="{% url 'remove_item' item.clothes.pk %}" class="flex gap-2 items-center">
+                    {% csrf_token %}
+                    <button type="submit" class="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600">-</button>
+                </form>
+                
+                <span class="text-lg">{{ item.quantity }}</span>
+                
+                <form method="post" action="{% url 'add_item' item.clothes.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600">+</button>
+                </form>
+            </div>
+            </div>
+        {% endfor %}
+        </div>
+
+        <!-- Summary -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Order summary</h2>
+        <div class="text-sm space-y-2">
+            <p class="flex justify-between text-gray-400">
+            <span>Total items</span>
+            <span>{{ order.items.count }}</span>
+            </p>
+            <hr class="my-3 border-gray-700" />
+            <p class="flex justify-between text-white font-bold text-lg">
+            <span>Total</span>
+            <span>₹{{ order.get_total_price }}</span>
+            </p>
+        </div>
+        <a href="{% url 'checkout' %}" class="mt-6 block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-all text-center">
+            Proceed to Checkout
+        </a>
+        <a href="{% url 'home' %}" class="block text-center mt-3 text-indigo-400 hover:underline text-sm">Continue Shopping</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <p class="text-gray-400 text-lg mb-4">Your cart is currently empty.</p>
+        <a href="{% url 'home' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-all">
+            Start Shopping
+        </a>
+    </div>
+    {% endif %}
+</main>
+{% tailwind_css %}
+</body>
+</html>

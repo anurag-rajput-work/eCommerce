@@ -1,0 +1,106 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-white">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-8">Checkout</h2>
+
+        {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+            <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-500{% endif %} text-white">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-10">
+            {% csrf_token %}
+        
+            <!-- DELIVERY DETAILS -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Delivery Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block mb-1 text-sm">Full Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">Contact Number</label>
+                        {{ form.contact_number }}
+                        {% if form.contact_number.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.contact_number.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">House No.</label>
+                        {{ form.house_number }}
+                        {% if form.house_number.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.house_number.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">Area</label>
+                        {{ form.area }}
+                        {% if form.area.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.area.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">City</label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.city.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">State</label>
+                        {{ form.state }}
+                        {% if form.state.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.state.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">Pin Code</label>
+                        {{ form.pin_code }}
+                        {% if form.pin_code.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.pin_code.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-sm">Country</label>
+                        {{ form.country }}
+                        {% if form.country.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.country.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center mt-4">
+                    {{ form.same_billing_address }}
+                    <label class="ml-2 text-sm">Billing address is same as shipping</label>
+                </div>
+            </div>
+        
+            <!-- PROCEED BUTTON -->
+            <div class="flex justify-between items-center">
+                <a href="{% url 'cart' %}" class="text-blue-400 hover:text-blue-300">
+                    ← Back to Cart
+                </a>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200">
+                    Proceed to Payment
+                </button>
+            </div>
+        </form>
+    </div>
+    {% tailwind_css %}
+</body>
+</html>

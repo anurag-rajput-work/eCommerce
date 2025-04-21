@@ -9,7 +9,6 @@
   <title>Online Store</title>
   
   <!-- Tailwind CSS CDN (Replace with local setup if needed) -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 
@@ -18,13 +17,16 @@
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="index.html" class="text-2xl font-bold text-indigo-600">Online CLOTH SHOP</a>
+      <a href="index.html" class="text-2xl font-bold text-indigo-600">SHOPPING CENTER</a>
       <nav class="hidden md:flex space-x-6">
+        {% if user.is_superuser %}
         <a href="{% url 'add_product' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">add product</a>
+        {% endif %}
         
         {% if user.is_authenticated %}
         
         <a href="#hero" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Home</a>
+        <a href="{% url 'cart' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">cart</a>
         <a href="{% url 'user_logout' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">logout</a>
         {% else %}
         <a href="{% url 'user_login' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">login</a>
@@ -64,22 +66,10 @@
         <a href="#about" class="mt-4 inline-block bg-indigo-600 px-6 py-2 rounded text-white hover:bg-indigo-700">Get Started</a>
       </div>
     </section>
-    {% if user.is_authenticated %}d
+    {% if user.is_authenticated %}
       {% block content %}
       {% endblock %}
     {% endif %}
-    <!-- Clients Section -->
-    <section id="clients" class="py-12 bg-white">
-      <div class="container mx-auto text-center">
-        <h3 class="text-2xl font-semibold">Our Clients</h3>
-        <div class="flex flex-wrap justify-center gap-6 mt-6">
-          {% for i in "123456" %}
-          <img src="{% static 'img/clients/client-'|add:i|add:'.png' %}" class="h-16">
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-   
     <!-- About Section -->
     <section id="about" class="py-12 bg-gray-100">
       <div class="container mx-auto flex flex-col md:flex-row items-center gap-8">
@@ -98,29 +88,6 @@
               <i class="bi bi-check-circle text-indigo-600 mr-2"></i> Secure & Fast Hosting
             </li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    
-    <!-- Stats Section -->
-    <section id="stats" class="py-12 bg-indigo-600 text-white text-center">
-      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div>
-          <span class="text-4xl font-bold">232</span>
-          <p class="text-lg">Clients</p>
-        </div>
-        <div>
-          <span class="text-4xl font-bold">521</span>
-          <p class="text-lg">Projects</p>
-        </div>
-        <div>
-          <span class="text-4xl font-bold">1453</span>
-          <p class="text-lg">Hours of Support</p>
-        </div>
-        <div>
-          <span class="text-4xl font-bold">32</span>
-          <p class="text-lg">Workers</p>
         </div>
       </div>
     </section>
@@ -150,12 +117,6 @@
       </div>
     </section>
 
-    <!-- Call To Action -->
-    <section id="call-to-action" class="py-12 bg-indigo-700 text-white text-center">
-      <h3 class="text-3xl font-semibold">Ready to Elevate Your Business?</h3>
-      <p class="mt-2">Get in touch with us today and let's build something amazing.</p>
-      <a href="#contact" class="mt-4 inline-block bg-white text-indigo-700 px-6 py-2 rounded hover:bg-gray-200">Get Started</a>
-    </section>
     {% tailwind_css %}
   </main>
 
