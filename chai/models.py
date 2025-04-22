@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 import uuid
+import random
 
 
 class Category(models.Model):
@@ -113,9 +114,15 @@ class Order(models.Model):
             except customer.DoesNotExist:
                 customer_id = 0  # Default if no customer found
             
-            # Generate order ID using timestamp and customer ID
-            timestamp = self.DateTime_ofpayment.strftime("%Y%m%d%H")
-            self.order_id = f"ECOM2{timestamp}{customer_id}"
+            # Generate order ID using timestamp, customer ID and a random component
+            timestamp = self.DateTime_ofpayment.strftime("%Y%m%d%H%M%S")
+            random_component = random.randint(1000, 9999)
+            self.order_id = f"ECOM2{timestamp}{customer_id}{random_component}"
+            
+            # Ensure uniqueness by checking if the order_id already exists
+            while Order.objects.filter(order_id=self.order_id).exists():
+                random_component = random.randint(1000, 9999)
+                self.order_id = f"ECOM2{timestamp}{customer_id}{random_component}"
             
         return super().save(*args, **kwargs)
     

@@ -28,6 +28,7 @@ def add_product(request):
         form = ClothesForm()
     return render(request, "chai/add_product.html", {"form": form})
 
+@login_required
 def add_to_cart(request, pk):
     cloth = Clothes.objects.get(pk=pk)
     
@@ -57,6 +58,7 @@ def add_to_cart(request, pk):
         messages.info(request, "This item was added to your cart.")
         return redirect("detail", pk=pk)
 
+@login_required
 def cart(request):
     try:
         if not request.user.is_authenticated:
@@ -80,6 +82,7 @@ def cart(request):
         messages.error(request, "An error occurred while loading your cart.")
         return render(request, "chai/cart.html", {"order": None})
 
+@login_required
 def add_item(request, pk):
     cloth = Clothes.objects.get(pk=pk)
     
@@ -113,6 +116,7 @@ def add_item(request, pk):
         messages.info(request, "This item was added to your cart.")
         return redirect("cart")
     
+@login_required
 def remove_item(request, pk):
     cloth = get_object_or_404(Clothes, pk=pk)
     order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -132,6 +136,7 @@ def remove_item(request, pk):
     messages.info(request, "This item was not in your cart.")
     return redirect("cart")
 
+@login_required
 def delete_item(request, pk):
     cloth = get_object_or_404(Clothes, pk=pk)
     order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -151,10 +156,19 @@ def delete_item(request, pk):
     return redirect("cart")
 
 
+@login_required
 def checkout_view(request):
-    # Check if user already has checkout details for current order
+    # Check if user has an active order
     current_order = Order.objects.filter(user=request.user, ordered=False).first()
-    if current_order and CheckoutDetails.objects.filter(user=request.user, order=current_order).exists():
+    
+    # If no active order, redirect to cart
+    if not current_order:
+        messages.warning(request, "You don't have any items in your cart.")
+        return redirect("cart")
+    
+    # Check if user already has checkout details for current order
+    if CheckoutDetails.objects.filter(user=request.user, order=current_order).exists():
+        messages.info(request, "You have already completed checkout for this order.")
         return redirect("cart")
         
     if request.method == "POST":
@@ -182,7 +196,13 @@ def checkout_view(request):
                 order.shipping_address = shipping_address
                 if same_billing_address:
                     order.billing_address = shipping_address
+                
+                # Mark the order as completed
+                order.ordered = True
                 order.save()
+                
+                # Mark all order items as ordered
+                order.items.all().update(ordered=True)
                 
                 # Create checkout details
                 checkout = CheckoutDetails(
@@ -200,7 +220,7 @@ def checkout_view(request):
                 )
                 checkout.save()
                 
-                messages.success(request, "Your order details have been saved successfully!")
+                messages.success(request, "Your order has been placed successfully!")
                 return redirect("cart")
             else:
                 messages.error(request, "Please correct the errors below.")
@@ -210,4 +230,16 @@ def checkout_view(request):
     else:
         form = CheckoutForm()
     return render(request, "chai/checkout.html", {"form": form})
-            
+
+@login_required           
+def search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        cloth = Clothes.objects.filter(name__contains=searched)
+        return render(request, 'chai/search.html', 
+        {'searched':searched,
+        'cloth':cloth})
+    else:
+        return render(request, 'chai/search.html', {})
+
+
