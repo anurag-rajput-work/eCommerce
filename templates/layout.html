@@ -13,6 +13,7 @@
 
 <body class="bg-gray-100 text-gray-900">
 
+
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -67,8 +68,17 @@
 {% endblock %}
 
   <main class="mt-20">
-
-    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 p-3 rounded-md 
+                {% if message.tags == 'success' %} bg-green-100 text-green-700 
+                {% elif message.tags == 'error' %} bg-red-100 text-red-700 
+                {% elif message.tags == 'warning' %} bg-yellow-100 text-yellow-700 
+                {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     
     <!-- Hero Section -->
     <section id="hero" class="relative h-screen flex items-center justify-center bg-cover bg-center" 

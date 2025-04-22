@@ -7,6 +7,13 @@ from django.shortcuts import get_object_or_404
 from .forms import *
 from django.contrib import messages
 from django.utils import timezone
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
+
+# Initialize razorpay client
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 # Create your views here.
 def myapp(request):
@@ -241,5 +248,95 @@ def search(request):
         'cloth':cloth})
     else:
         return render(request, 'chai/search.html', {})
+
+@login_required
+def initiate_payment(request):
+    try:
+        # Get the current order
+        order_qs = Order.objects.filter(user=request.user, ordered=False)
+        if not order_qs.exists():
+            messages.warning(request, "You don't have any items in your cart.")
+            return redirect("cart")
+        
+        order = order_qs[0]
+        amount = int(order.get_total() * 100)  # Convert to paise
+        
+        # Create a Razorpay Order
+        razorpay_order = client.order.create(dict(
+            amount=amount,
+            currency='INR',
+            payment_capture='0'
+        ))
+        
+        # Save the order ID in your database
+        order.razorpay_order_id = razorpay_order['id']
+        order.save()
+        
+        # Prepare context for template
+        context = {
+            'order': order,
+            'razorpay_order_id': razorpay_order['id'],
+            'razorpay_merchant_key': settings.RAZORPAY_KEY_ID,
+            'amount': amount,
+            'currency': 'INR',
+            'callback_url': 'http://' + request.get_host() + '/paymenthandler/'
+        }
+        
+        return render(request, 'chai/payment.html', context)
+        
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect("cart")
+
+@csrf_exempt
+def paymenthandler(request):
+    if request.method == "POST":
+        try:
+            # Get the required parameters from post request
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            razorpay_order_id = request.POST.get('razorpay_order_id', '')
+            signature = request.POST.get('razorpay_signature', '')
+            
+            # Verify the payment signature
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            }
+            
+            result = client.utility.verify_payment_signature(params_dict)
+            
+            if result is not None:
+                try:
+                    # Get the order
+                    order = Order.objects.get(razorpay_order_id=razorpay_order_id)
+                    
+                    # Capture the payment
+                    amount = int(order.get_total() * 100)
+                    client.payment.capture(payment_id, amount)
+                    
+                    # Update the order status
+                    order.ordered = True
+                    order.payment_id = payment_id
+                    order.save()
+                    
+                    # Clear the cart
+                    order.items.all().update(ordered=True)
+                    
+                    messages.success(request, "Payment successful! Your order has been placed.")
+                    return redirect("cart")
+                    
+                except Exception as e:
+                    messages.error(request, f"An error occurred: {str(e)}")
+                    return redirect("cart")
+            else:
+                messages.error(request, "Payment verification failed.")
+                return redirect("cart")
+                
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect("cart")
+    else:
+        return HttpResponseBadRequest()
 
 

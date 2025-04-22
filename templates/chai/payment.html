@@ -1,0 +1,78 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg p-6 bg-white rounded-2xl shadow-lg">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Complete Your Payment</h2>
+            <p class="text-lg text-gray-600 mb-6">Order Total: ₹<span class="font-semibold">{{ order.get_total }}</span></p>
+        </div>
+
+        <form action="{% url 'paymenthandler' %}" method="POST" id="payment-form">
+            {% csrf_token %}
+            <input type="hidden" custom="Hidden Element" name="hidden">
+
+            <!-- Razorpay Script (hidden) -->
+            <script
+                id="razorpay-script"
+                src="https://checkout.razorpay.com/v1/checkout.js"
+                data-key="{{ razorpay_merchant_key }}"
+                data-amount="{{ amount }}"
+                data-currency="{{ currency }}"
+                data-order_id="{{ razorpay_order_id }}"
+                data-name="Your Store Name"
+                data-description="Order Payment"
+                data-image="{% static 'img/logo.png' %}"
+                data-prefill.name="{{ user.username }}"
+                data-prefill.email="{{ user.email }}"
+                data-theme.color="#F37254"
+            ></script>
+
+            <!-- Custom Styled Button -->
+            <button
+                type="button"
+                onclick="payNow()"
+                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
+            >
+                Pay with Razorpay
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function payNow() {
+            const options = {
+                key: "{{ razorpay_merchant_key }}",
+                amount: "{{ amount }}",
+                currency: "{{ currency }}",
+                order_id: "{{ razorpay_order_id }}",
+                name: "Your Store Name",
+                description: "Order Payment",
+                image: "{% static 'img/logo.png' %}",
+                prefill: {
+                    name: "{{ user.username }}",
+                    email: "{{ user.email }}"
+                },
+                theme: {
+                    color: "#F37254"
+                },
+                handler: function (response) {
+                    // You can optionally handle success here
+                    document.getElementById('payment-form').submit();
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+
+    {% tailwind_css %}
+</body>
+</html>

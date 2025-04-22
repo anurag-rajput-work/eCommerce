@@ -102,8 +102,10 @@ class Order(models.Model):
     order_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     DateTime_ofpayment = models.DateTimeField(default=timezone.now)
     ordered_delivered = models.BooleanField(default=False)
-    shipping_address = models.CharField(max_length=100, blank=True, null=True)
-    billing_address = models.CharField(max_length=100, blank=True, null=True)
+    shipping_address = models.TextField(blank=True, null=True)
+    billing_address = models.TextField(blank=True, null=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.order_id:
@@ -137,6 +139,12 @@ class Order(models.Model):
     
     def get_total_count(self):
         return self.items.count()
+
+    def get_total(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_final_price()
+        return total
 
 
 class CheckoutDetails(models.Model):

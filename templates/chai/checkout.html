@@ -20,7 +20,7 @@
         </div>
         {% endif %}
 
-        <form method="POST" class="space-y-10">
+        <form method="POST" action="{% url 'initiate_payment' %}" class="space-y-10">
             {% csrf_token %}
         
             <!-- DELIVERY DETAILS -->
