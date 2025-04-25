@@ -138,5 +138,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'user_login'
 
 # Razorpay Settings
-RAZORPAY_KEY_ID = 'rzp_test_O67f5ISRrXZPA6' 
-RAZORPAY_KEY_SECRET = 'qnuJMLlhA7h0XnsZ3XEM1wnb' 
+RAZORPAY_KEY_ID = 'rzp_test_dlgh8zksdHWZD2' 
+RAZORPAY_KEY_SECRET = 'rXpx6kAewJQFYdAAJ084rsBD' 

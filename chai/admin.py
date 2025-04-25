@@ -23,6 +23,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('user', 'phone_field', 'id')  # Use the existing id field instead
 
 
+
 admin.site.register(Clothes, clothesAdmin)
 admin.site.register(ClothesCertification, ClothesCertificationAdmin)
 admin.site.register(Store, StoreAdmin)
@@ -30,3 +31,4 @@ admin.site.register(customer, CustomerAdmin)
 admin.site.register(order_Item)
 admin.site.register(Order)
 admin.site.register(CheckoutDetails)
+admin.site.register(Category)

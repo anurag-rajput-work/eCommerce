@@ -1,106 +1,73 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-900 text-white">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Checkout</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout | Online Store</title>
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
 </head>
-<body class="p-6">
-    <div class="max-w-6xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-        <h2 class="text-3xl font-bold mb-8">Checkout</h2>
 
-        {% if messages %}
-        <div class="mb-6">
-            {% for message in messages %}
-            <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-500{% endif %} text-white">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
+<body class="bg-cyan-800 text-gray-900">
+
+<!-- Navbar -->
+<header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+<div class="container mx-auto px-6 py-4 flex items-center justify-between">
+<a href="{% url 'home' %}" class="text-2xl font-bold text-indigo-600">SHOPPING CENTER</a>
+    <nav class="hidden md:flex space-x-6">
+    <a href="{% url 'add_product' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Add Product</a>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'home' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Home</a>
+        <a href="{% url 'user_logout' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Logout</a>
+        {% else %}
+        <a href="{% url 'user_login' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Login</a>
+        <a href="{% url 'user_register' %}" class="relative flex items-center justify-center w-[6.5em] h-[2.0em] border-2 border-[#3654ff] rounded-lg text-black transition-all duration-500 hover:bg-[#3654ff]">Register</a>
         {% endif %}
-
-        <form method="POST" action="{% url 'initiate_payment' %}" class="space-y-10">
-            {% csrf_token %}
-        
-            <!-- DELIVERY DETAILS -->
-            <div>
-                <h3 class="text-xl font-semibold mb-4">Delivery Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block mb-1 text-sm">Full Name</label>
-                        {{ form.name }}
-                        {% if form.name.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">Contact Number</label>
-                        {{ form.contact_number }}
-                        {% if form.contact_number.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.contact_number.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">House No.</label>
-                        {{ form.house_number }}
-                        {% if form.house_number.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.house_number.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">Area</label>
-                        {{ form.area }}
-                        {% if form.area.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.area.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">City</label>
-                        {{ form.city }}
-                        {% if form.city.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.city.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">State</label>
-                        {{ form.state }}
-                        {% if form.state.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.state.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">Pin Code</label>
-                        {{ form.pin_code }}
-                        {% if form.pin_code.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.pin_code.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-sm">Country</label>
-                        {{ form.country }}
-                        {% if form.country.errors %}
-                        <p class="text-red-500 text-sm mt-1">{{ form.country.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="flex items-center mt-4">
-                    {{ form.same_billing_address }}
-                    <label class="ml-2 text-sm">Billing address is same as shipping</label>
-                </div>
-            </div>
-        
-            <!-- PROCEED BUTTON -->
-            <div class="flex justify-between items-center">
-                <a href="{% url 'cart' %}" class="text-blue-400 hover:text-blue-300">
-                    ← Back to Cart
-                </a>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200">
-                    Proceed to Payment
-                </button>
-            </div>
-        </form>
+    </nav>
     </div>
-    {% tailwind_css %}
+</header>
+
+<!-- Main Content -->
+<main class="pt-24 pb-16">
+    <div class="container mx-auto px-6 md:px-12">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+            
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-500{% endif %} text-white">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in form %}
+                    <div class="space-y-2">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-red-500 text-sm">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                    Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% tailwind_css %}
 </body>
 </html>

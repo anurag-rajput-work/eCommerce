@@ -81,64 +81,238 @@
     {% endif %}
     
     <!-- Hero Section -->
-    <section id="hero" class="relative h-screen flex items-center justify-center bg-cover bg-center" 
-      style="background-image: url('{% static 'img/hero-bg.jpg' %}');">
-      <div class="text-center text-white bg-black bg-opacity-50 p-6 rounded-lg">
-        {% if user.is_authenticated %}
-        <h2 class="text-4xl font-bold">welcome to our online store {{ user.username }}</h2>
-        {% else %}
-        <h2 class="text-4xl font-bold">login to get started</h2>
-        {% endif %}
-        <p class="mt-2 text-lg">let us design your online presence</p>
-        <a href="#about" class="mt-4 inline-block bg-indigo-600 px-6 py-2 rounded text-white hover:bg-indigo-700">Get Started</a>
+    <section id="hero" class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" 
+      style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=80');">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+      <div class="container mx-auto px-6 text-center relative z-10">
+        <div class="max-w-3xl mx-auto space-y-8">
+          <div class="bg-black/30 backdrop-blur-sm rounded-2xl p-8 space-y-6">
+            <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight">
+              WELCOME TO<br>
+              <span class="text-6xl md:text-6xl block mt-2 bg-gradient-to-r from-white via-gray-200 to-gray-100 text-transparent bg-clip-text">SHOPPING CENTER</span>
+            </h1>
+            {% if user.is_authenticated %}
+            <p class="text-xl md:text-2xl text-gray-200 font-light">
+              Welcome back, {{ user.username }}! Discover our latest collection of premium fashion.
+            </p>
+            {% else %}
+            <p class="text-xl md:text-2xl text-gray-200 font-light">
+              Discover elegant fashion pieces for the modern lifestyle
+            </p>
+            {% endif %}
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+              <a href="#featured-products" class="group relative px-8 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-100 transition duration-300 min-w-[200px] overflow-hidden">
+                <span class="relative z-10">Shop Now</span>
+                <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <div class="absolute inset-0 bg-white group-hover:bg-opacity-0 transition-colors duration-300"></div>
+              </a>
+              {% if not user.is_authenticated %}
+              <a href="{% url 'user_login' %}" class="group relative px-8 py-3 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-black transition duration-300 min-w-[200px]">
+                <span class="relative z-10 group-hover:text-black transition-colors duration-300">Sign In</span>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- Decorative Elements -->
+          <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-32 h-32 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full filter blur-3xl opacity-20"></div>
+          <div class="absolute right-0 bottom-0 w-64 h-64 bg-gradient-to-l from-indigo-500 to-purple-500 rounded-full filter blur-3xl opacity-20"></div>
+        </div>
       </div>
     </section>
+
+    <!-- content -->
     {% if user.is_authenticated %}
       {% block content %}
       {% endblock %}
     {% endif %}
+
+    
     <!-- About Section -->
-    <section id="about" class="py-12 bg-gray-100">
-      <div class="container mx-auto flex flex-col md:flex-row items-center gap-8">
-        <img src="{% static 'img/about.jpg' %}" class="w-full md:w-1/2 rounded-lg shadow-lg">
-        <div class="w-full md:w-1/2">
-          <h3 class="text-3xl font-semibold">About Us</h3>
-          <p class="mt-4 text-gray-600">We specialize in creating stunning, high-performance websites.</p>
-          <ul class="mt-4 space-y-2">
-            <li class="flex items-center">
-              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> Responsive and Mobile-Friendly Designs
-            </li>
-            <li class="flex items-center">
-              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> SEO Optimized Websites
-            </li>
-            <li class="flex items-center">
-              <i class="bi bi-check-circle text-indigo-600 mr-2"></i> Secure & Fast Hosting
-            </li>
-          </ul>
+    <section id="about" class="py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+          <div class="w-full md:w-1/2 space-y-6">
+            <div class="space-y-4">
+              <h2 class="text-4xl font-bold text-gray-900">About Our Fashion Store</h2>
+              <div class="w-20 h-1 bg-indigo-600"></div>
+            </div>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              Welcome to your premier destination for contemporary fashion. We curate collections that blend timeless elegance with modern trends, ensuring you find pieces that express your unique style.
+            </p>
+            <div class="grid grid-cols-2 gap-6">
+              <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <span class="font-medium">Premium Quality</span>
+                </div>
+                <p class="text-gray-600 text-sm">Carefully selected materials</p>
+              </div>
+              <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                  </div>
+                  <span class="font-medium">Latest Trends</span>
+                </div>
+                <p class="text-gray-600 text-sm">Updated collections</p>
+              </div>
+              <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <span class="font-medium">Fast Shipping</span>
+                </div>
+                <p class="text-gray-600 text-sm">Quick delivery</p>
+              </div>
+              <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3"></path>
+                    </svg>
+                  </div>
+                  <span class="font-medium">Easy Returns</span>
+                </div>
+                <p class="text-gray-600 text-sm">Hassle-free policy</p>
+              </div>
+            </div>
+            <div class="pt-6">
+              <a href="#featured-products" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition duration-300">
+                Explore Collection
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                  <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=80" alt="Fashion Collection" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                  <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80" alt="Fashion Style" class="w-full h-48 object-cover transform group-hover:scale-110 transition duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+              </div>
+              <div class="space-y-4 pt-8">
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                  <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=80" alt="Fashion Trends" class="w-full h-48 object-cover transform group-hover:scale-110 transition duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                  <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=800&q=80" alt="Fashion Store" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Why Us Section -->
-    <section id="why-us" class="py-12 bg-white">
-      <div class="container mx-auto text-center">
-        <h3 class="text-3xl font-semibold">Why Choose Us?</h3>
-        <p class="mt-2 text-gray-600">We offer quality and reliability you can trust.</p>
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-gray-100 p-6 rounded-lg">
-            <i class="bi bi-award text-3xl text-indigo-600"></i>
-            <h4 class="mt-4 font-semibold">Top Quality</h4>
-            <p class="text-gray-600">We use the latest technologies to deliver the best results.</p>
+    <section id="why-us" class="py-16 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-4xl font-bold text-gray-900">Why Choose Us?</h2>
+          <div class="w-20 h-1 bg-indigo-600 mx-auto my-4"></div>
+          <p class="text-lg text-gray-600">Experience fashion excellence with our curated collection and exceptional service</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Quality & Style -->
+          <div class="group relative overflow-hidden rounded-2xl">
+            <div class="aspect-w-16 aspect-h-12 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=800&q=80" alt="Quality Fashion" 
+                class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+              <div class="absolute bottom-0 left-0 right-0 p-8">
+                <div class="mb-4">
+                  <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-white mb-2">Premium Quality</h3>
+                  <p class="text-gray-300">Carefully curated collection of high-quality fashion pieces that stand the test of time.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="bg-gray-100 p-6 rounded-lg">
-            <i class="bi bi-person-check text-3xl text-indigo-600"></i>
-            <h4 class="mt-4 font-semibold">Client-Focused</h4>
-            <p class="text-gray-600">We prioritize our clients' needs and satisfaction.</p>
+
+          <!-- Customer Service -->
+          <div class="group relative overflow-hidden rounded-2xl">
+            <div class="aspect-w-16 aspect-h-12 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" alt="Fashion Service" 
+                class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+              <div class="absolute bottom-0 left-0 right-0 p-8">
+                <div class="mb-4">
+                  <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-white mb-2">Expert Service</h3>
+                  <p class="text-gray-300">Dedicated support team to help you find the perfect style that matches your personality.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="bg-gray-100 p-6 rounded-lg">
-            <i class="bi bi-lightbulb text-3xl text-indigo-600"></i>
-            <h4 class="mt-4 font-semibold">Innovative Solutions</h4>
-            <p class="text-gray-600">We craft modern and innovative digital experiences.</p>
+
+          <!-- Fast Delivery -->
+          <div class="group relative overflow-hidden rounded-2xl">
+            <div class="aspect-w-16 aspect-h-12 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=800&q=80" alt="Fashion Delivery" 
+                class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+              <div class="absolute bottom-0 left-0 right-0 p-8">
+                <div class="mb-4">
+                  <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-white mb-2">Fast Delivery</h3>
+                  <p class="text-gray-300">Quick and reliable shipping to get your favorite fashion pieces to your doorstep.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Features -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">2K+</div>
+            <p class="text-gray-600">Happy Customers</p>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">500+</div>
+            <p class="text-gray-600">Premium Products</p>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">98%</div>
+            <p class="text-gray-600">Success Rate</p>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">24/7</div>
+            <p class="text-gray-600">Customer Support</p>
           </div>
         </div>
       </div>

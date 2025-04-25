@@ -86,9 +86,15 @@
             <span>₹{{ order.get_total_price }}</span>
             </p>
         </div>
-        <a href="{% url 'checkout'%}" class="mt-6 block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-all text-center">
-            Proceed to Checkout
-        </a>
+        {% if order.shipping_address %}
+            <a href="{% url 'initiate_payment' %}" class="mt-6 block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-all text-center">
+                Proceed to Payment
+            </a>
+        {% else %}
+            <a href="{% url 'checkout'%}" class="mt-6 block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-all text-center">
+                Proceed to Checkout
+            </a>
+        {% endif %}
         <a href="{% url 'home' %}" class="block text-center mt-3 text-indigo-400 hover:underline text-sm">Continue Shopping</a>
         </div>
     </div>

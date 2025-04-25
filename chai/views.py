@@ -203,13 +203,7 @@ def checkout_view(request):
                 order.shipping_address = shipping_address
                 if same_billing_address:
                     order.billing_address = shipping_address
-                
-                # Mark the order as completed
-                order.ordered = True
                 order.save()
-                
-                # Mark all order items as ordered
-                order.items.all().update(ordered=True)
                 
                 # Create checkout details
                 checkout = CheckoutDetails(
@@ -227,8 +221,8 @@ def checkout_view(request):
                 )
                 checkout.save()
                 
-                messages.success(request, "Your order has been placed successfully!")
-                return redirect("cart")
+                # Redirect to payment page
+                return redirect('initiate_payment')
             else:
                 messages.error(request, "Please correct the errors below.")
         except Exception as e:
@@ -296,14 +290,13 @@ def paymenthandler(request):
             payment_id = request.POST.get('razorpay_payment_id', '')
             razorpay_order_id = request.POST.get('razorpay_order_id', '')
             signature = request.POST.get('razorpay_signature', '')
-            
-            # Verify the payment signature
             params_dict = {
                 'razorpay_order_id': razorpay_order_id,
                 'razorpay_payment_id': payment_id,
                 'razorpay_signature': signature
             }
-            
+
+            # Verify the payment signature
             result = client.utility.verify_payment_signature(params_dict)
             
             if result is not None:
@@ -312,31 +305,29 @@ def paymenthandler(request):
                     order = Order.objects.get(razorpay_order_id=razorpay_order_id)
                     
                     # Capture the payment
-                    amount = int(order.get_total() * 100)
+                    amount = int(order.get_total() * 100)  # Convert to paise
                     client.payment.capture(payment_id, amount)
                     
-                    # Update the order status
-                    order.ordered = True
+                    # Update order with payment ID and mark as ordered
                     order.payment_id = payment_id
+                    order.ordered = True
+                    order.DateTime_ofpayment = timezone.now()
                     order.save()
                     
-                    # Clear the cart
+                    # Mark all order items as ordered
                     order.items.all().update(ordered=True)
                     
                     messages.success(request, "Payment successful! Your order has been placed.")
-                    return redirect("cart")
-                    
+                    return redirect('cart')
                 except Exception as e:
                     messages.error(request, f"An error occurred: {str(e)}")
-                    return redirect("cart")
+                    return redirect('cart')
             else:
                 messages.error(request, "Payment verification failed.")
-                return redirect("cart")
-                
+                return redirect('cart')
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
-            return redirect("cart")
+            return redirect('cart')
     else:
         return HttpResponseBadRequest()
-
 
